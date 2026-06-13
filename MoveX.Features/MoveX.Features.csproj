@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MoveX.Database\MoveX.Database.csproj" />
+    <ProjectReference Include="..\MoveX.Domain\MoveX.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Habits\" />
+    <Folder Include="Finance\" />
+    <Folder Include="Goals\" />
+    <Folder Include="Journal\" />
+    <Folder Include="Subjects\" />
+    <Folder Include="TodoItems\" />
+    <Folder Include="TimeEntries\" />
+    <Folder Include="StudySession\" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="MoveX.Database/MoveX.Database.csproj" />
+  <Project Path="MoveX.Domain/MoveX.Domain.csproj" />
+  <Project Path="MoveX.Features/MoveX.Features.csproj" />
+  <Project Path="MoveX.WPF/MoveX.WPF.csproj" />
+</Solution>
