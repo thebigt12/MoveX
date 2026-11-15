@@ -8,5 +8,7 @@ namespace MoveX.Domain
         public string Text { get; set; } = "";
         public DateTime StartTime { get; set; } = DateTime.Now;
         public DateTime FinishTime { get; set; }
+
+        public TimeSpan Duration => FinishTime - StartTime;
     }
 }

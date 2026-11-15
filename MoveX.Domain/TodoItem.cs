@@ -8,5 +8,7 @@ namespace MoveX.Domain
         public string Description { get; set; } = "";
         public DateTime? DueDate { get; set; }
         public bool IsCompleted { get; set; }
+
+        public bool IsOverdue => !IsCompleted && DueDate is not null && DueDate.Value.Date < DateTime.Today;
     }
 }
