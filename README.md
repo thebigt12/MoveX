@@ -1,8 +1,7 @@
 # MoveX
 
 A personal productivity dashboard, built with WPF and C#.
-
-I started this project to have one place for tracking habits, finances, goals, and study time instead of juggling multiple apps — and to properly learn Vertical Slice Architecture, EF Core, and dependency injection along the way.
+I started this project because it seemed like a good way to teach myself Vertical Slice Architecture, EF Core, and dependency injection along the way.
 
 ## What it does
 
@@ -19,7 +18,7 @@ MoveX combines several productivity tools into one app:
 ## Status
 
 Core features implemented across all modules
-No UI yet
+UI is currently being implemented.
 
 ## Running
 cd MoveX.WPF
