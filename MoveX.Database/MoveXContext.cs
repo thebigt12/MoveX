@@ -5,6 +5,17 @@ namespace MoveX.Database
 {
     public class MoveXContext : DbContext
     {
+        public static readonly string DatabasePath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MoveX", "movex.db");
+
+        public MoveXContext()
+        {
+        }
+
+        public MoveXContext(DbContextOptions<MoveXContext> options) : base(options)
+        {
+        }
+
         public DbSet<Habit> Habits { get; set; }
         public DbSet<JournalEntry> JournalEntries { get; set; }
         public DbSet<StudySession> StudySessions { get; set; }
@@ -17,9 +28,13 @@ namespace MoveX.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "MoveX", "movex.db");
-            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            optionsBuilder.UseSqlite($"Data Source={path}");
+            if (optionsBuilder.IsConfigured)
+            {
+                return;
+            }
+
+            Directory.CreateDirectory(Path.GetDirectoryName(DatabasePath)!);
+            optionsBuilder.UseSqlite($"Data Source={DatabasePath}");
         }
     }
 }

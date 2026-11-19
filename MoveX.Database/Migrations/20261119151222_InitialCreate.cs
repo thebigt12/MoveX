@@ -76,6 +76,7 @@ namespace MoveX.Database.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     CategoryId = table.Column<int>(type: "INTEGER", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
                     Amount = table.Column<decimal>(type: "TEXT", nullable: false),
                     TimeOfPurchase = table.Column<DateTime>(type: "TEXT", nullable: false),
                     IsExpense = table.Column<bool>(type: "INTEGER", nullable: false)

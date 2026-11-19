@@ -214,6 +214,10 @@ namespace MoveX.Database.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsExpense")
                         .HasColumnType("INTEGER");
 

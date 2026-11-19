@@ -11,7 +11,7 @@ using MoveX.Database;
 namespace MoveX.Database.Migrations
 {
     [DbContext(typeof(MoveXContext))]
-    [Migration("20260603184401_InitialCreate")]
+    [Migration("20261119151222_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -216,6 +216,10 @@ namespace MoveX.Database.Migrations
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<bool>("IsExpense")
                         .HasColumnType("INTEGER");
