@@ -1,17 +1,23 @@
+using Microsoft.EntityFrameworkCore;
 using MoveX.Database;
 
 namespace MoveX.Features.Journal
 {
     public class DeleteJournalEntryHandler
     {
-        private readonly MoveXContext _context;
-        public DeleteJournalEntryHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public DeleteJournalEntryHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task Execute(int id)
         {
-            var entry = await _context.JournalEntries.FindAsync(id);
-            _context.JournalEntries.Remove(entry!);
-            await _context.SaveChangesAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            var entry = await context.JournalEntries.FindAsync(id);
+            context.JournalEntries.Remove(entry!);
+            await context.SaveChangesAsync();
         }
     }
 }

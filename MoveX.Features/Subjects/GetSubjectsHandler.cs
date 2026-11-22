@@ -6,12 +6,20 @@ namespace MoveX.Features.Subjects
 {
     public class GetSubjectsHandler
     {
-        private readonly MoveXContext _context;
-        public GetSubjectsHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public GetSubjectsHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task<List<Subject>> Execute()
         {
-            return await _context.Subjects.ToListAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Subjects
+                .AsNoTracking()
+                .OrderBy(s => s.Name)
+                .ToListAsync();
         }
     }
 }

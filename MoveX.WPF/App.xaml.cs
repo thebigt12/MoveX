@@ -20,7 +20,7 @@ namespace MoveX.WPF
 
             var services = new ServiceCollection();
 
-            services.AddDbContext<MoveXContext>();
+            services.AddDbContextFactory<MoveXContext>();
 
             // Habits
             services.AddTransient<AddHabitHandler>();

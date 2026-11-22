@@ -1,17 +1,23 @@
+using Microsoft.EntityFrameworkCore;
 using MoveX.Database;
 
 namespace MoveX.Features.StudySessions
 {
     public class DeleteStudySessionHandler
     {
-        private readonly MoveXContext _context;
-        public DeleteStudySessionHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public DeleteStudySessionHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task Execute(int id)
         {
-            var session = await _context.StudySessions.FindAsync(id);
-            _context.StudySessions.Remove(session!);
-            await _context.SaveChangesAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            var session = await context.StudySessions.FindAsync(id);
+            context.StudySessions.Remove(session!);
+            await context.SaveChangesAsync();
         }
     }
 }

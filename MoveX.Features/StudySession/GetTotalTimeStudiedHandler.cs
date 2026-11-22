@@ -5,13 +5,18 @@ namespace MoveX.Features.StudySessions
 {
     public class GetTotalTimeStudiedHandler
     {
-        private readonly MoveXContext _context;
-        public GetTotalTimeStudiedHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public GetTotalTimeStudiedHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task<TimeSpan> Execute()
         {
-            var list = await _context.StudySessions.ToListAsync();
-            return list.Aggregate(TimeSpan.Zero, (total, s) => total + s.Duration);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            var sessions = await context.StudySessions.AsNoTracking().ToListAsync();
+            return sessions.Aggregate(TimeSpan.Zero, (total, s) => total + s.Duration);
         }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MoveX.Database;
 using MoveX.Domain;
 
@@ -5,13 +6,18 @@ namespace MoveX.Features.StudySessions
 {
     public class AddStudySessionHandler
     {
-        private readonly MoveXContext _context;
-        public AddStudySessionHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public AddStudySessionHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task Execute(StudySession session)
         {
-            await _context.StudySessions.AddAsync(session);
-            await _context.SaveChangesAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            await context.StudySessions.AddAsync(session);
+            await context.SaveChangesAsync();
         }
     }
 }

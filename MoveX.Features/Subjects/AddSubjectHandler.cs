@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MoveX.Database;
 using MoveX.Domain;
 
@@ -5,13 +6,18 @@ namespace MoveX.Features.Subjects
 {
     public class AddSubjectHandler
     {
-        private readonly MoveXContext _context;
-        public AddSubjectHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public AddSubjectHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task Execute(Subject subject)
         {
-            await _context.Subjects.AddAsync(subject);
-            await _context.SaveChangesAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            await context.Subjects.AddAsync(subject);
+            await context.SaveChangesAsync();
         }
     }
 }

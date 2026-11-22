@@ -1,17 +1,23 @@
+using Microsoft.EntityFrameworkCore;
 using MoveX.Database;
 
 namespace MoveX.Features.TodoItems
 {
     public class CompleteTodoItemHandler
     {
-        private readonly MoveXContext _context;
-        public CompleteTodoItemHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public CompleteTodoItemHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task Execute(int id)
         {
-            var item = await _context.TodoItems.FindAsync(id);
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            var item = await context.TodoItems.FindAsync(id);
             item!.IsCompleted = true;
-            await _context.SaveChangesAsync();
+            await context.SaveChangesAsync();
         }
     }
 }

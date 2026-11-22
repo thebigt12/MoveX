@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MoveX.Database;
 using MoveX.Domain;
 
@@ -5,13 +6,18 @@ namespace MoveX.Features.TodoItems
 {
     public class AddTodoItemHandler
     {
-        private readonly MoveXContext _context;
-        public AddTodoItemHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public AddTodoItemHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task Execute(TodoItem item)
         {
-            await _context.TodoItems.AddAsync(item);
-            await _context.SaveChangesAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            await context.TodoItems.AddAsync(item);
+            await context.SaveChangesAsync();
         }
     }
 }

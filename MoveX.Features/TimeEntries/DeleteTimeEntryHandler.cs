@@ -1,17 +1,23 @@
+using Microsoft.EntityFrameworkCore;
 using MoveX.Database;
 
 namespace MoveX.Features.TimeEntries
 {
     public class DeleteTimeEntryHandler
     {
-        private readonly MoveXContext _context;
-        public DeleteTimeEntryHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public DeleteTimeEntryHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task Execute(int id)
         {
-            var entry = await _context.TimeEntries.FindAsync(id);
-            _context.TimeEntries.Remove(entry!);
-            await _context.SaveChangesAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            var entry = await context.TimeEntries.FindAsync(id);
+            context.TimeEntries.Remove(entry!);
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -1,17 +1,23 @@
+using Microsoft.EntityFrameworkCore;
 using MoveX.Database;
 
 namespace MoveX.Features.Habits
 {
     public class DeleteHabitHandler
     {
-        private readonly MoveXContext _context;
-        public DeleteHabitHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public DeleteHabitHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task Execute(int id)
         {
-            var habit = await _context.Habits.FindAsync(id);
-            _context.Habits.Remove(habit!);
-            await _context.SaveChangesAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            var habit = await context.Habits.FindAsync(id);
+            context.Habits.Remove(habit!);
+            await context.SaveChangesAsync();
         }
     }
 }

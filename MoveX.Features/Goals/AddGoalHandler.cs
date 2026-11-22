@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MoveX.Database;
 using MoveX.Domain;
 
@@ -5,13 +6,18 @@ namespace MoveX.Features.Goals
 {
     public class AddGoalHandler
     {
-        private readonly MoveXContext _context;
-        public AddGoalHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public AddGoalHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task Execute(Goal goal)
         {
-            await _context.Goals.AddAsync(goal);
-            await _context.SaveChangesAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            await context.Goals.AddAsync(goal);
+            await context.SaveChangesAsync();
         }
     }
 }

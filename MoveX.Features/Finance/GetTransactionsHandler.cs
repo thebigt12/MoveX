@@ -6,12 +6,21 @@ namespace MoveX.Features.Finance
 {
     public class GetTransactionsHandler
     {
-        private readonly MoveXContext _context;
-        public GetTransactionsHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public GetTransactionsHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task<List<Transaction>> Execute()
         {
-            return await _context.Transactions.ToListAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Transactions
+                .AsNoTracking()
+                .Include(t => t.Category)
+                .OrderByDescending(t => t.TimeOfPurchase)
+                .ToListAsync();
         }
     }
 }

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using MoveX.Database;
 using MoveX.Domain;
 
@@ -5,13 +6,18 @@ namespace MoveX.Features.Habits
 {
     public class AddHabitHandler
     {
-        private readonly MoveXContext _context;
-        public AddHabitHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public AddHabitHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task Execute(Habit habit)
         {
-            await _context.Habits.AddAsync(habit);
-            await _context.SaveChangesAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            await context.Habits.AddAsync(habit);
+            await context.SaveChangesAsync();
         }
     }
 }

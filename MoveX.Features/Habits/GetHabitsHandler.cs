@@ -6,12 +6,20 @@ namespace MoveX.Features.Habits
 {
     public class GetHabitsHandler
     {
-        private readonly MoveXContext _context;
-        public GetHabitsHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public GetHabitsHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task<List<Habit>> Execute()
         {
-            return await _context.Habits.ToListAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.Habits
+                .AsNoTracking()
+                .OrderBy(h => h.Id)
+                .ToListAsync();
         }
     }
 }

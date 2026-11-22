@@ -6,12 +6,20 @@ namespace MoveX.Features.Journal
 {
     public class GetJournalEntriesHandler
     {
-        private readonly MoveXContext _context;
-        public GetJournalEntriesHandler(MoveXContext context) { _context = context; }
+        private readonly IDbContextFactory<MoveXContext> _contextFactory;
+
+        public GetJournalEntriesHandler(IDbContextFactory<MoveXContext> contextFactory)
+        {
+            _contextFactory = contextFactory;
+        }
 
         public async Task<List<JournalEntry>> Execute()
         {
-            return await _context.JournalEntries.ToListAsync();
+            await using var context = await _contextFactory.CreateDbContextAsync();
+            return await context.JournalEntries
+                .AsNoTracking()
+                .OrderByDescending(j => j.TimeOfEntry)
+                .ToListAsync();
         }
     }
 }
